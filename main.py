@@ -23,15 +23,6 @@ def create_model(username : str, trigger_word : str, file_path: str):
     # Imprimir detalles del modelo
     print(f"Model created: {model.name}")
 
-    training = replicate.trainings.create(
-    version="ostris/flux-dev-lora-trainer:4ffd32160efd92e956d39c5338a9b8fbafca58e03f791f6d8011f3e20e8ea6fa",
-    input={
-        "input_images": file_path,  # Ruta al archivo de imágenes de entrenamiento en formato .zip
-        "steps": 1000,  # Número de pasos para el entrenamiento
-
-    },
-    destination=f"{model.owner}/{model.name}"  # Establece el modelo como destino para el entrenamiento
-)
     with open(file_path, "rb") as file:
         training = replicate.trainings.create(
             version="ostris/flux-dev-lora-trainer:4ffd32160efd92e956d39c5338a9b8fbafca58e03f791f6d8011f3e20e8ea6fa",
@@ -49,7 +40,7 @@ def create_model(username : str, trigger_word : str, file_path: str):
 
 
 @app.post("/create_model")
-def new_model(username : str, trigger_word : str, file : UploadFile = File(...)):
+async def new_model(username : str, trigger_word : str, file : UploadFile = File(...)):
     file_path = f"./{file.filename}"
     with open(file_path, "wb") as buffer:
         shutil.copyfileobj(file.file, buffer)
