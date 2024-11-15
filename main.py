@@ -11,7 +11,7 @@ load_dotenv()
 api_token = os.getenv("REPLICATE_API_TOKEN")
 replicate.Client(api_token=api_token)
 
-def create_model(username : str, file_path: str):
+def create_model(username : str, trigger_word : str, file_path: str):
     model = replicate.models.create(
         owner="travelinglos",
         name=f"{username}",
@@ -28,6 +28,7 @@ def create_model(username : str, file_path: str):
     input={
         "input_images": file_path,  # Ruta al archivo de imágenes de entrenamiento en formato .zip
         "steps": 1000,  # Número de pasos para el entrenamiento
+
     },
     destination=f"{model.owner}/{model.name}"  # Establece el modelo como destino para el entrenamiento
 )
@@ -37,6 +38,7 @@ def create_model(username : str, file_path: str):
             input={
                 "input_images": file,  # Archivo .zip con las imágenes de entrenamiento
                 "steps": 1000,  # Número de pasos para el entrenamiento
+                "trigger_word": f"{trigger_word}"
             },
             destination=f"{model.owner}/{model.name}"
         )
@@ -47,13 +49,13 @@ def create_model(username : str, file_path: str):
 
 
 @app.post("/create_model")
-def new_model(username:str, file : UploadFile = File(...)):
+def new_model(username : str, trigger_word : str, file : UploadFile = File(...)):
     file_path = f"./{file.filename}"
     with open(file_path, "wb") as buffer:
         shutil.copyfileobj(file.file, buffer)
 
     # Llama a la función `create_model` y pasa el archivo .zip temporal
-    result = create_model(username, file_path)
+    result = create_model(username, trigger_word, file_path)
 
     # Elimina el archivo temporal
     os.remove(file_path)
