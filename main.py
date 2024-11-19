@@ -1,4 +1,4 @@
-from fastapi import FastAPI, File, UploadFile
+from fastapi import FastAPI, File, UploadFile, HTTPException
 import replicate
 import os
 from dotenv import load_dotenv
@@ -34,21 +34,32 @@ def create_model(username : str, trigger_word : str, file_path: str):
             destination=f"{model.owner}/{model.name}"
         )
 
-    # Imprime el estado inicial del entrenamiento
-    print(f"Training started: {training.status}")
-    print(f"Training URL: https://replicate.com/p/{training.id}")
-
 
 @app.post("/create_model")
-async def new_model(username : str, trigger_word : str, file : UploadFile = File(...)):
+async def new_model(username: str, trigger_word: str, file: UploadFile = File(...)):
     file_path = f"./{file.filename}"
-    with open(file_path, "wb") as buffer:
-        shutil.copyfileobj(file.file, buffer)
+    try:
+        # Guarda el archivo temporalmente
+        with open(file_path, "wb") as buffer:
+            shutil.copyfileobj(file.file, buffer)
 
-    # Llama a la función `create_model` y pasa el archivo .zip temporal
-    result = create_model(username, trigger_word, file_path)
+        # Llama a la función `create_model` y pasa el archivo .zip temporal
+        create_model(username, trigger_word, file_path)
 
-    # Elimina el archivo temporal
-    os.remove(file_path)
+        # Elimina el archivo temporal
+        os.remove(file_path)
 
-    return result
+        # Devuelve un mensaje de éxito con código 200
+        return {
+            "success": True,
+            "message": "Model created and training started successfully."
+        }
+    except Exception as e:
+        # Maneja errores y devuelve un código HTTP 400 (Bad Request)
+        raise HTTPException(
+            status_code=400,
+            detail={
+                "success": False,
+                "message": f"An error occurred: {str(e)}"
+            }
+        )
