@@ -63,3 +63,4 @@ async def new_model(username: str, trigger_word: str, file: UploadFile = File(..
                 "message": f"An error occurred: {str(e)}"
             }
         )
+    
