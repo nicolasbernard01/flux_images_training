@@ -1,4 +1,6 @@
 from fastapi import FastAPI, File, UploadFile, HTTPException
+import asyncio
+from pydantic import BaseModel
 import replicate
 import os
 from dotenv import load_dotenv
@@ -11,6 +13,10 @@ load_dotenv()
 api_token = os.getenv("REPLICATE_API_TOKEN")
 replicate.Client(api_token=api_token)
 
+class ImageRequest(BaseModel):
+    prompt : str
+
+# Funcion que crea un nuevo modelo entrenado
 def create_model(username : str, trigger_word : str, file_path: str):
     model = replicate.models.create(
         owner="travelinglos",
@@ -24,6 +30,7 @@ def create_model(username : str, trigger_word : str, file_path: str):
     print(f"Model created: {model.name}")
 
     with open(file_path, "rb") as file:
+        
         training = replicate.trainings.create(
             version="ostris/flux-dev-lora-trainer:4ffd32160efd92e956d39c5338a9b8fbafca58e03f791f6d8011f3e20e8ea6fa",
             input={
@@ -34,6 +41,30 @@ def create_model(username : str, trigger_word : str, file_path: str):
             destination=f"{model.owner}/{model.name}"
         )
 
+# Función para ejecutar replicate.run y la creacion de imagen
+def create_trained_image(prompt: str):
+    
+    output = replicate.run(
+        "travelinglos/fanta-lemon:3474c31a696bc0d0fbe034d544f0c43985c180a34e256f7a6e01136fe7b831ef",
+        input={
+            
+            "prompt": f"{prompt}",
+            "model": "dev",
+            "go_fast": False,
+            "lora_scale": 1,
+            "megapixels": "1",
+            "num_outputs": 1,
+            "aspect_ratio": "1:1",
+            "output_format": "webp",
+            "guidance_scale": 3,
+            "output_quality": 80,
+            "prompt_strength": 0.8,
+            "extra_lora_scale": 1,
+            "num_inference_steps": 28,
+        }
+    )
+
+    print(output)
 
 @app.post("/create_model")
 async def new_model(username: str, trigger_word: str, file: UploadFile = File(...)):
@@ -63,4 +94,8 @@ async def new_model(username: str, trigger_word: str, file: UploadFile = File(..
                 "message": f"An error occurred: {str(e)}"
             }
         )
+
+@app.post("/create_image")
+async def create_image(request: ImageRequest):
     
+    return create_trained_image(prompt=request)
