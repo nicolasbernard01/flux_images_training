@@ -42,7 +42,7 @@ def create_model(username : str, trigger_word : str, file_path: str):
         )
 
 # Función para ejecutar replicate.run y la creacion de imagen
-def create_trained_image(prompt: str):
+def create_trained_image(prompt: str)-> str:
     
     output = replicate.run(
     "travelinglos/fanta-lemon:3474c31a696bc0d0fbe034d544f0c43985c180a34e256f7a6e01136fe7b831ef",
@@ -74,7 +74,7 @@ def create_trained_image(prompt: str):
             "num_inference_steps": 28
         }
     )
-    print(output)
+    return str(output[0])
 
 @app.post("/create_model")
 async def new_model(username: str, trigger_word: str, file: UploadFile = File(...)):
