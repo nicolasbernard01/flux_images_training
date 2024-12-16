@@ -1,5 +1,4 @@
 from fastapi import FastAPI, File, UploadFile, HTTPException
-import asyncio
 from pydantic import BaseModel
 import replicate
 import os
