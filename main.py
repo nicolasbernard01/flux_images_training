@@ -47,18 +47,7 @@ def create_trained_image(prompt: str)-> str:
     "travelinglos/fanta-lemon:3474c31a696bc0d0fbe034d544f0c43985c180a34e256f7a6e01136fe7b831ef",
         input={
             "model": "dev",
-            "prompt": f"""
-            {prompt}.
-            Negative Prompt:
-            No distortions or deformities in figures, no unnatural body proportions or poses, 
-            no unmentioned elements such as weapons, animals, or unrelated objects, 
-            no anachronistic clothing or accessories, no incorrect or inconsistent logos or text, 
-            no unrealistic colors in any elements, no exaggerated lighting or inconsistent shadows, 
-            no blurry or low-resolution details. 
-            All objects and features must appear natural, seamless, and accurately integrated into the context. 
-            The overall image should maintain balance and realism, avoiding clutter, irrelevant elements, or visual distractions, 
-            ensuring a clean and harmonious final composition.
-            """,
+            "prompt": f"{prompt}",
             "go_fast": False,
             "lora_scale": 1,
             "megapixels": "1",
