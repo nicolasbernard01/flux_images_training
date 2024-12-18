@@ -53,7 +53,7 @@ def create_trained_image(prompt: str)-> str:
             "megapixels": "1",
             "num_outputs": 1,
             "aspect_ratio": "1:1",
-            "output_format": "webp",
+            "output_format": "jpeg",
             "guidance_scale": 3,
             "output_quality": 80,
             "prompt_strength": 0.8,
