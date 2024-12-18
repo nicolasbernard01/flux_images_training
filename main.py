@@ -55,7 +55,7 @@ def create_trained_image(prompt: str)-> str:
             "aspect_ratio": "1:1",
             "output_format": "png",
             "guidance_scale": 3,
-            "output_quality": 80,
+            "output_quality": 100,
             "prompt_strength": 0.8,
             "extra_lora" : "https://replicate.delivery/xezq/2zFIXstgEdpzB9pHuRj5tJKqrecs1U0lJUZOeNUVWVw8C55TA/trained_model.tar",
             "extra_lora_scale": 1,
