@@ -41,10 +41,10 @@ def create_model(username : str, trigger_word : str, file_path: str):
         )
 
 # Función para ejecutar replicate.run y la creacion de imagen
-def create_trained_image(prompt: str)-> str:
+def create_trained_image(prompt: str, model : str)-> str:
     
     output = replicate.run(
-    "travelinglos/fanta-lemon:3474c31a696bc0d0fbe034d544f0c43985c180a34e256f7a6e01136fe7b831ef",
+    f"travelinglos/{model}:3474c31a696bc0d0fbe034d544f0c43985c180a34e256f7a6e01136fe7b831ef",
         input={
             "model": "dev",
             "prompt": f"{prompt}",
@@ -81,7 +81,8 @@ async def new_model(username: str, trigger_word: str, file: UploadFile = File(..
         # Devuelve un mensaje de éxito con código 200
         return {
             "success": True,
-            "message": "Model created and training started successfully."
+            "message": "Model created and training started successfully.",
+            'model_name' : username
         }
     except Exception as e:
         # Maneja errores y devuelve un código HTTP 400 (Bad Request)
