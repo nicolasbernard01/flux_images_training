@@ -60,7 +60,7 @@ def create_trained_image(prompt: str, model : str)-> str:
                 "guidance_scale": 3,
                 "output_quality": 100,
                 "prompt_strength": 0.8,
-                "extra_lora": "https://replicate.delivery/xezq/2zFIXstgEdpzB9pHuRj5tJKqrecs1U0lJUZOeNUVWVw8C55TA/trained_model.tar",
+                #"extra_lora": "https://replicate.delivery/xezq/2zFIXstgEdpzB9pHuRj5tJKqrecs1U0lJUZOeNUVWVw8C55TA/trained_model.tar",
                 "extra_lora_scale": 1,
                 "num_inference_steps": 28
             }
