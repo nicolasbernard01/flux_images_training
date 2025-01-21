@@ -16,10 +16,10 @@ class ImageRequest(BaseModel):
     prompt : str
 
 # Funcion que crea un nuevo modelo entrenado
-def create_model(username : str, trigger_word : str, file_path: str):
+def create_model(model_name : str, trigger_word : str, file_path: str):
     model = replicate.models.create(
         owner="travelinglos",
-        name=f"{username}",
+        name=f"{model_name}",
         visibility="private",
         hardware="gpu-t4",
         description="A fine-tuned FLUX.1 model"
@@ -65,7 +65,7 @@ def create_trained_image(prompt: str, model : str)-> str:
     return str(output[0])
 
 @app.post("/create_model")
-async def new_model(username: str, trigger_word: str, file: UploadFile = File(...)):
+async def new_model(username: str, model_name: str, trigger_word: str, file: UploadFile = File(...)):
     file_path = f"./{file.filename}"
     try:
         # Guarda el archivo temporalmente
@@ -73,7 +73,7 @@ async def new_model(username: str, trigger_word: str, file: UploadFile = File(..
             shutil.copyfileobj(file.file, buffer)
 
         # Llama a la función `create_model` y pasa el archivo .zip temporal
-        create_model(username, trigger_word, file_path)
+        create_model(username, model_name, trigger_word, file_path)
 
         # Elimina el archivo temporal
         os.remove(file_path)
@@ -82,8 +82,9 @@ async def new_model(username: str, trigger_word: str, file: UploadFile = File(..
         return {
             "success": True,
             "message": "Model created and training started successfully.",
-            'model_name' : username,
-            'trigger_word' : trigger_word
+            'model_name' : model_name,
+            'trigger_word' : trigger_word,
+            'created_by' : username
         }
     except Exception as e:
         # Maneja errores y devuelve un código HTTP 400 (Bad Request)
