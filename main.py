@@ -85,10 +85,6 @@ async def new_model(model_name: str, trigger_word: str, file: UploadFile = File(
 
         # Devuelve un mensaje de éxito con código 200
         return {
-            "success": True,
-            "message": "Model created and training started successfully.",
-            'model_name' : model_name,
-            'trigger_word' : trigger_word,
             'flux_model' : f"{model_name}:{training.version}"
         }
     except Exception as e:
