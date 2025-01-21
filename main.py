@@ -84,9 +84,8 @@ async def new_model(model_name: str, trigger_word: str, file: UploadFile = File(
         os.remove(file_path)
 
         # Devuelve un mensaje de éxito con código 200
-        return {
-            'flux_model' : f"{model_name}:{training.version}"
-        }
+        return f"{model_name}:{training.version}"
+    
     except Exception as e:
         # Maneja errores y devuelve un código HTTP 400 (Bad Request)
         raise HTTPException(
