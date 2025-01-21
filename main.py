@@ -82,7 +82,8 @@ async def new_model(username: str, trigger_word: str, file: UploadFile = File(..
         return {
             "success": True,
             "message": "Model created and training started successfully.",
-            'model_name' : username
+            'model_name' : username,
+            'trigger_word' : trigger_word
         }
     except Exception as e:
         # Maneja errores y devuelve un código HTTP 400 (Bad Request)
