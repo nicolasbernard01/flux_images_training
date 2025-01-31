@@ -18,6 +18,7 @@ class ImageRequest(BaseModel):
 
 # Funcion que crea un nuevo modelo entrenado
 def create_model(model_name : str, trigger_word : str, file_path: str):
+    
     model = replicate.models.create(
         owner="travelinglos",
         name=f"{model_name}",
