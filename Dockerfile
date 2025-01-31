@@ -2,7 +2,7 @@ FROM python:3.10
 
 WORKDIR /app
 
-COPY /requirements.txt .
+COPY flux_images_training/requirements.txt .
 RUN pip install -r requirements.txt
 
 COPY . .
