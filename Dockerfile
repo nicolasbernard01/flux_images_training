@@ -1,20 +1,20 @@
-# Use the official Python image from the Docker Hub
+# Usa la imagen oficial de Python
 FROM python:3.9-slim
 
-# Set the working directory in the container
+# Establece el directorio de trabajo en el contenedor
 WORKDIR /app
 
-# Copy the requirements file into the container
+# Copia el archivo de dependencias
 COPY requirements.txt .
 
-# Install the dependencies
+# Instala las dependencias
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the FastAPI app code into the container
+# Copia el código de la aplicación FastAPI al contenedor
 COPY . .
 
-# Expose the port FastAPI is running on
+# Expone el puerto 8000 (puedes cambiarlo si es necesario)
 EXPOSE 8000
 
-# Command to run the FastAPI app
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "$PORT"]
+# Comando para ejecutar la aplicación FastAPI
+CMD ["sh", "-c", "uvicorn main:app --host 0.0.0.0 --port ${PORT:-8000}"]
